@@ -2,7 +2,6 @@ package net.lunahub.lunanpc.examples;
 
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
-import net.lunahub.luna_npc.alliance.NpcAlliance;
 import net.lunahub.luna_npc.api.AllianceRegistry;
 import net.lunahub.luna_npc.api.LunaNpcApi;
 import net.lunahub.luna_npc.api.Npc;
@@ -21,27 +20,16 @@ public final class FriendlyGuardExample {
     public static void build(MinecraftServer server) {
         // A town-square zone, reused if it already exists.
         ZoneRegistry zones = LunaNpcApi.zones(server);
-        NpcZone square = zones.all().stream()
-                .filter(zone -> "Town Square".equals(zone.name()))
-                .findFirst()
-                .orElseGet(() -> zones.createBox("Town Square", "minecraft:overworld", -20, 63, -20, 20, 80, 20));
+        NpcZone square = zones.getOrCreateBox("Town Square", "minecraft:overworld", -20, 63, -20, 20, 80, 20);
 
-        // A "Townsfolk" faction, reused if it exists, protecting players/villagers and fighting monsters.
+        // A "Townsfolk" faction, reused if it exists; protects players/villagers, hostile to monsters.
         AllianceRegistry alliances = LunaNpcApi.alliances(server);
-        String townsfolk = alliances.all().stream()
-                .filter(alliance -> "Townsfolk".equals(alliance.name()))
-                .map(NpcAlliance::id)
-                .findFirst()
-                .orElseGet(() -> alliances.create("Townsfolk").id());
+        String townsfolk = alliances.getOrCreate("Townsfolk").id();
         alliances.setMates(townsfolk, List.of("players", "villagers"));
         alliances.setEnemies(townsfolk, List.of("undead", "creatures", "illagers"));
 
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc guard = npcs.all().stream()
-                .filter(npc -> "TownGuard".equals(npc.name()))
-                .map(Npc.class::cast)
-                .findFirst()
-                .orElseGet(() -> npcs.create("TownGuard"));
+        Npc guard = npcs.getOrCreate("TownGuard");
 
         guard.setHealth(40);
         guard.setNameTagShown(true);

@@ -16,11 +16,7 @@ public final class BiomeArcherExample {
 
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc archer = npcs.all().stream()
-                .filter(npc -> "DesertArcher".equals(npc.name()))
-                .map(Npc.class::cast)
-                .findFirst()
-                .orElseGet(() -> npcs.create("DesertArcher"));
+        Npc archer = npcs.getOrCreate("DesertArcher");
 
         archer.setHealth(20);
         archer.setAllianceId("creatures");

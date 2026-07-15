@@ -1,8 +1,6 @@
 package net.lunahub.lunanpc.examples;
 
-import java.util.List;
 import net.minecraft.server.MinecraftServer;
-import net.lunahub.luna_npc.alliance.NpcAlliance;
 import net.lunahub.luna_npc.api.AllianceRegistry;
 import net.lunahub.luna_npc.api.LunaNpcApi;
 import net.lunahub.luna_npc.api.Npc;
@@ -20,37 +18,23 @@ public final class WarringFactionsExample {
 
     public static void build(MinecraftServer server) {
         AllianceRegistry alliances = LunaNpcApi.alliances(server);
-        String crimson = reuseOrCreate(alliances, "Crimson Pact");
-        String azure = reuseOrCreate(alliances, "Azure Order");
-        alliances.setEnemies(crimson, List.of(azure));
-        alliances.setEnemies(azure, List.of(crimson));
+        String crimson = alliances.getOrCreate("Crimson Pact").id();
+        String azure = alliances.getOrCreate("Azure Order").id();
+        // addEnemy is incremental — it won't wipe relationships another mod added to these factions.
+        alliances.addEnemy(crimson, azure);
+        alliances.addEnemy(azure, crimson);
 
         ZoneRegistry zones = LunaNpcApi.zones(server);
-        NpcZone arena = zones.all().stream()
-                .filter(zone -> "War Arena".equals(zone.name()))
-                .findFirst()
-                .orElseGet(() -> zones.createBox("War Arena", "minecraft:overworld", -30, 63, -30, 30, 90, 30));
+        NpcZone arena = zones.getOrCreateBox("War Arena", "minecraft:overworld", -30, 63, -30, 30, 90, 30);
 
         NpcRegistry npcs = LunaNpcApi.npcs(server);
         spawnSoldier(npcs, "CrimsonSoldier", crimson, "minecraft:iron_sword", "piglin", "piglin_brute", arena.id());
         spawnSoldier(npcs, "AzureSoldier", azure, "minecraft:golden_sword", "illager", "vindicator", arena.id());
     }
 
-    private static String reuseOrCreate(AllianceRegistry alliances, String name) {
-        return alliances.all().stream()
-                .filter(alliance -> name.equals(alliance.name()))
-                .map(NpcAlliance::id)
-                .findFirst()
-                .orElseGet(() -> alliances.create(name).id());
-    }
-
     private static void spawnSoldier(NpcRegistry npcs, String name, String allianceId, String weapon,
                                      String modelType, String modelId, String arenaId) {
-        Npc soldier = npcs.all().stream()
-                .filter(npc -> name.equals(npc.name()))
-                .map(Npc.class::cast)
-                .findFirst()
-                .orElseGet(() -> npcs.create(name));
+        Npc soldier = npcs.getOrCreate(name);
         soldier.setHealth(24);
         soldier.setNameTagShown(true);
         soldier.setAllianceId(allianceId);

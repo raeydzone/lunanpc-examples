@@ -15,11 +15,7 @@ public final class BossExample {
 
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc titan = npcs.all().stream()
-                .filter(npc -> "DeepDarkTitan".equals(npc.name()))
-                .map(Npc.class::cast)
-                .findFirst()
-                .orElseGet(() -> npcs.create("DeepDarkTitan"));
+        Npc titan = npcs.getOrCreate("DeepDarkTitan");
 
         titan.setHealth(300);
         titan.setNameTagShown(true);

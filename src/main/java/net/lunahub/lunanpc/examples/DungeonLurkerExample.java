@@ -15,14 +15,9 @@ public final class DungeonLurkerExample {
     }
 
     public static void build(MinecraftServer server) {
-        // Reuse the NPC if it already exists, otherwise create it, so re-running applies the latest
-        // settings without ever duplicating.
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc lurker = npcs.all().stream()
-                .filter(npc -> "DungeonLurker".equals(npc.name()))
-                .map(Npc.class::cast)
-                .findFirst()
-                .orElseGet(() -> npcs.create("DungeonLurker"));
+        // getOrCreate: reuse the definition if it exists, else create it — idempotent, no duplicates.
+        Npc lurker = npcs.getOrCreate("DungeonLurker");
 
         lurker.setHealth(30);
         lurker.setAllianceId("undead");
