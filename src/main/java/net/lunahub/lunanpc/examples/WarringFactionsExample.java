@@ -2,14 +2,14 @@ package net.lunahub.lunanpc.examples;
 
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
-import net.raeydzone.luna_npc.alliance.NpcAlliance;
-import net.raeydzone.luna_npc.api.AllianceRegistry;
-import net.raeydzone.luna_npc.api.LunaNpcApi;
-import net.raeydzone.luna_npc.api.Npc;
-import net.raeydzone.luna_npc.api.NpcRegistry;
-import net.raeydzone.luna_npc.api.ZoneRegistry;
-import net.raeydzone.luna_npc.npc.NpcReactionSettings;
-import net.raeydzone.luna_npc.zone.NpcZone;
+import net.lunahub.luna_npc.alliance.NpcAlliance;
+import net.lunahub.luna_npc.api.AllianceRegistry;
+import net.lunahub.luna_npc.api.LunaNpcApi;
+import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcRegistry;
+import net.lunahub.luna_npc.api.ZoneRegistry;
+import net.lunahub.luna_npc.npc.NpcReactionSettings;
+import net.lunahub.luna_npc.zone.NpcZone;
 
 // Two rival factions set as mutual enemies, with a soldier each — a piglin brute vs. an illager
 // raider — that spawn into a shared arena and fight on sight (but never their own side).

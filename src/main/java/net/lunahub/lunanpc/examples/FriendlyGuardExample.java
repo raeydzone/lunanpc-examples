@@ -2,14 +2,14 @@ package net.lunahub.lunanpc.examples;
 
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
-import net.raeydzone.luna_npc.alliance.NpcAlliance;
-import net.raeydzone.luna_npc.api.AllianceRegistry;
-import net.raeydzone.luna_npc.api.LunaNpcApi;
-import net.raeydzone.luna_npc.api.Npc;
-import net.raeydzone.luna_npc.api.NpcRegistry;
-import net.raeydzone.luna_npc.api.ZoneRegistry;
-import net.raeydzone.luna_npc.npc.NpcReactionSettings;
-import net.raeydzone.luna_npc.zone.NpcZone;
+import net.lunahub.luna_npc.alliance.NpcAlliance;
+import net.lunahub.luna_npc.api.AllianceRegistry;
+import net.lunahub.luna_npc.api.LunaNpcApi;
+import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcRegistry;
+import net.lunahub.luna_npc.api.ZoneRegistry;
+import net.lunahub.luna_npc.npc.NpcReactionSettings;
+import net.lunahub.luna_npc.zone.NpcZone;
 
 // A friendly town guard: a sturdy custom player skin standing in a zone, in its own "Townsfolk"
 // faction (friendly to players and villagers, hostile to the monster factions), that defends the town.

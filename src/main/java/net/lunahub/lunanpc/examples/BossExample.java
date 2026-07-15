@@ -1,10 +1,10 @@
 package net.lunahub.lunanpc.examples;
 
 import net.minecraft.server.MinecraftServer;
-import net.raeydzone.luna_npc.api.LunaNpcApi;
-import net.raeydzone.luna_npc.api.Npc;
-import net.raeydzone.luna_npc.api.NpcRegistry;
-import net.raeydzone.luna_npc.npc.NpcReactionSettings;
+import net.lunahub.luna_npc.api.LunaNpcApi;
+import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcRegistry;
+import net.lunahub.luna_npc.npc.NpcReactionSettings;
 
 // A rare, oversized boss with a boss bar: a hulking, stretched "corbin" titan in full netherite that
 // spawns only in ancient cities. The huge stats are intentional — LunaNPC never clamps for "balance".

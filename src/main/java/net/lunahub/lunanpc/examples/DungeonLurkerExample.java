@@ -1,11 +1,11 @@
 package net.lunahub.lunanpc.examples;
 
 import net.minecraft.server.MinecraftServer;
-import net.raeydzone.luna_npc.api.LunaNpcApi;
-import net.raeydzone.luna_npc.api.Npc;
-import net.raeydzone.luna_npc.api.NpcRegistry;
-import net.raeydzone.luna_npc.npc.NpcReactionSettings;
-import net.raeydzone.luna_npc.zone.SurfaceMode;
+import net.lunahub.luna_npc.api.LunaNpcApi;
+import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcRegistry;
+import net.lunahub.luna_npc.npc.NpcReactionSettings;
+import net.lunahub.luna_npc.zone.SurfaceMode;
 
 // A hostile dungeon monster: a stretched "husk" that natural-spawns inside structures (caves only),
 // joins the built-in "undead" faction, and drops XP plus chance-based loot.
