@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lunanpc_examples",
+  "version": "${version}",
+  "name": "LunaNPC Examples",
+  "description": "Three self-contained examples of the LunaNPC developer API: a dungeon monster, a biome spawner, and a friendly guard.",
+  "contact": {
+    "homepage": "https://lunahub.net",
+    "sources": "https://github.com/raeydzone/lunanpc-examples"
+  },
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.lunahub.lunanpc.examples.LunaExamplesMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}",
+    "luna_npc": "*"
+  }
+}
