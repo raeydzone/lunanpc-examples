@@ -7,8 +7,8 @@ import net.lunahub.luna_npc.api.LunaNpcApi;
 import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
 import net.lunahub.luna_npc.api.ZoneRegistry;
-import net.lunahub.luna_npc.npc.NpcReactionSettings;
-import net.lunahub.luna_npc.zone.NpcZone;
+import net.lunahub.luna_npc.api.NpcReactionSettings;
+import net.lunahub.luna_npc.api.NpcZone;
 
 // A friendly town guard: a sturdy custom player skin standing in a zone, in its own "Townsfolk"
 // faction (friendly to players and villagers, hostile to the monster factions), that defends the town.

@@ -4,8 +4,8 @@ import net.minecraft.server.MinecraftServer;
 import net.lunahub.luna_npc.api.LunaNpcApi;
 import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
-import net.lunahub.luna_npc.npc.NpcReactionSettings;
-import net.lunahub.luna_npc.zone.SurfaceMode;
+import net.lunahub.luna_npc.api.NpcReactionSettings;
+import net.lunahub.luna_npc.api.SurfaceMode;
 
 // A hostile ranged archer: a lean "stray" skeleton that natural-spawns across desert biomes at the
 // surface, tuned into a long-range sniper, in the built-in "creatures" (Monsters) faction.
