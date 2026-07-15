@@ -9,9 +9,10 @@ import net.raeydzone.luna_npc.zone.SurfaceMode;
 
 // Biome example — a hostile archer that natural-spawns out in the open across desert biomes.
 //
-// Shows: biome-driven spawning, a ranged weapon (bow + arrow), tuning the combat brain into a
-// long-range sniper, surface-only placement, and joining the built-in "Monsters" faction so it
-// hunts players out of the box. Biome ids come from the live registry — modded biomes work too.
+// Shows: a "stray" skeleton look stretched a little tall and lean, biome-driven spawning, a ranged
+// weapon (bow + arrow), tuning the combat brain into a long-range sniper, surface-only placement,
+// and joining the built-in "Monsters" faction so it hunts players out of the box. Biome ids come
+// from the live registry — modded biomes work too.
 public final class BiomeArcherExample {
 
     private BiomeArcherExample() {
@@ -25,6 +26,13 @@ public final class BiomeArcherExample {
 
         Npc archer = npcs.create("DesertArcher");
         archer.setHealth(20);
+
+        // Look: the bleached "stray" skeleton skin, stretched slightly tall and lean for a lanky
+        // desert sharpshooter. Skeleton is one of the stretchable humanoid models.
+        archer.setModelSettings(archer.modelSettings()
+                .withModel("skeleton", "stray")
+                .withLeftArmScale(1.2F).withRightArmScale(1.2F)
+                .withLeftLegScale(1.3F).withRightLegScale(1.3F));
 
         // "creatures" is the built-in Monsters faction — already hostile to players.
         archer.setAllianceId("creatures");

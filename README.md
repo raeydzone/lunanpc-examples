@@ -9,11 +9,14 @@ Part of **[lunahub.net](https://lunahub.net)**.
 
 | File | What it shows |
 |------|----------------|
-| [`DungeonLurkerExample`](src/main/java/net/lunahub/lunanpc/examples/DungeonLurkerExample.java) | A hostile monster that natural-spawns inside **structures**, underground only, with armor and loot drops. |
-| [`BiomeArcherExample`](src/main/java/net/lunahub/lunanpc/examples/BiomeArcherExample.java) | A long-range archer that natural-spawns across a **biome**, at the open surface. |
-| [`FriendlyGuardExample`](src/main/java/net/lunahub/lunanpc/examples/FriendlyGuardExample.java) | A **friendly** town guard in a named **zone** and its own faction — protects players, fights monsters. |
-| [`WarringFactionsExample`](src/main/java/net/lunahub/lunanpc/examples/WarringFactionsExample.java) | Two custom **factions** set as mutual enemies, with a soldier on each side fighting in a shared arena. |
-| [`BossExample`](src/main/java/net/lunahub/lunanpc/examples/BossExample.java) | A rare, oversized **boss** with a boss bar and huge stats — LunaNPC's "no forced balance" in action. |
+| [`DungeonLurkerExample`](src/main/java/net/lunahub/lunanpc/examples/DungeonLurkerExample.java) | A hostile monster that natural-spawns inside **structures**, underground only — a stretched "husk" with armor, an XP range, and chance-based loot. |
+| [`BiomeArcherExample`](src/main/java/net/lunahub/lunanpc/examples/BiomeArcherExample.java) | A long-range **archer** that natural-spawns across a **biome**, at the open surface — a lean "stray" skeleton sniper. |
+| [`FriendlyGuardExample`](src/main/java/net/lunahub/lunanpc/examples/FriendlyGuardExample.java) | A **friendly** town guard in a named **zone** and its own faction — a sturdy custom player skin; protects players, fights monsters. |
+| [`WarringFactionsExample`](src/main/java/net/lunahub/lunanpc/examples/WarringFactionsExample.java) | Two custom **factions** set as mutual enemies — a piglin brute vs. an illager raider — fighting in a shared arena. |
+| [`BossExample`](src/main/java/net/lunahub/lunanpc/examples/BossExample.java) | A rare, oversized **boss** with a boss bar and huge stats — a hulking, stretched titan; LunaNPC's "no forced balance" in action. |
+
+Along the way they show off **custom skins and model stretching** (`withModel` + per-part scales),
+chance-based item drops and XP ranges — not just the default Steve.
 
 Each is invoked once on server start by
 [`LunaExamplesMod`](src/main/java/net/lunahub/lunanpc/examples/LunaExamplesMod.java). Every example is

@@ -14,10 +14,10 @@ import net.raeydzone.luna_npc.zone.NpcZone;
 // Friendly example — a town guard that stands watch in a zone, belongs to its own faction, defends
 // the town against monsters, and never turns on players.
 //
-// Shows: building a spawn zone from plain coordinates, creating an alliance only if it does not
-// already exist and wiring its relationships (friendly to players and villagers, hostile to the
-// built-in monster factions), showing the name tag, a defensive temperament, and placing the NPC
-// as a natural spawn inside the zone.
+// Shows: a distinct player skin built a little sturdier than default, a spawn zone from plain
+// coordinates, creating an alliance only if it does not already exist and wiring its relationships
+// (friendly to players and villagers, hostile to the built-in monster factions), the name tag, a
+// defensive temperament, and placing the NPC as a natural spawn inside the zone.
 public final class FriendlyGuardExample {
 
     private FriendlyGuardExample() {
@@ -52,6 +52,14 @@ public final class FriendlyGuardExample {
         guard.setHealth(40);
         guard.setNameTagShown(true);
         guard.setAllianceId(townsfolk);
+
+        // Look: a distinct "kai" player skin, built a bit broader through the chest and arms so the
+        // guard reads as a sturdy townsperson rather than default Steve.
+        guard.setModelSettings(guard.modelSettings()
+                .withModel("player", "kai")
+                .withBodyScale(1.15F)
+                .withLeftArmScale(1.25F).withRightArmScale(1.25F));
+
         guard.giveMeleeWeapon("minecraft:iron_sword", 8.0F);
 
         // Defensive: defends itself and nearby mates and fights back when attacked, but never hunts —

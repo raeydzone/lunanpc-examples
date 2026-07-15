@@ -15,7 +15,8 @@ import net.raeydzone.luna_npc.zone.NpcZone;
 // side that spawns into a shared arena and fights the enemy faction on sight (but never its own).
 //
 // Shows: creating two alliances (reused if they already exist), making them mutual enemies with
-// setEnemies, and assigning one NPC to each — the whole point of the faction system, in one file.
+// setEnemies, giving each side a completely different model so the two armies are easy to tell
+// apart, and assigning one NPC to each — the whole point of the faction system, in one file.
 public final class WarringFactionsExample {
 
     private WarringFactionsExample() {
@@ -44,8 +45,9 @@ public final class WarringFactionsExample {
                 .findFirst()
                 .orElseGet(() -> zones.createBox("War Arena", "minecraft:overworld", -30, 63, -30, 30, 90, 30));
 
-        spawnSoldier(npcs, "CrimsonSoldier", crimson, "minecraft:iron_sword", arena.id());
-        spawnSoldier(npcs, "AzureSoldier", azure, "minecraft:golden_sword", arena.id());
+        // Brutish piglin brawlers vs. axe-wielding illager raiders — two very different silhouettes.
+        spawnSoldier(npcs, "CrimsonSoldier", crimson, "minecraft:iron_sword", "piglin", "piglin_brute", arena.id());
+        spawnSoldier(npcs, "AzureSoldier", azure, "minecraft:golden_sword", "illager", "vindicator", arena.id());
     }
 
     // The id of the alliance with this name, creating it only if none exists yet.
@@ -57,11 +59,13 @@ public final class WarringFactionsExample {
                 .orElseGet(() -> alliances.create(name).id());
     }
 
-    private static void spawnSoldier(NpcRegistry npcs, String name, String allianceId, String weapon, String arenaId) {
+    private static void spawnSoldier(NpcRegistry npcs, String name, String allianceId, String weapon,
+                                     String modelType, String modelId, String arenaId) {
         Npc soldier = npcs.create(name);
         soldier.setHealth(24);
         soldier.setNameTagShown(true);
         soldier.setAllianceId(allianceId);
+        soldier.setModelSettings(soldier.modelSettings().withModel(modelType, modelId));
         soldier.giveMeleeWeapon(weapon, 5.0F);
         // Aggressive so each side hunts the other the moment they cross paths.
         soldier.setTraits(soldier.traits()

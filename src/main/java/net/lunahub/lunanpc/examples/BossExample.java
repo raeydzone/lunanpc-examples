@@ -9,8 +9,9 @@ import net.raeydzone.luna_npc.npc.NpcReactionSettings;
 // Boss example — a rare, oversized raid boss with a boss bar that guards the deep dark.
 //
 // Shows: LunaNPC's "no forced balance" stance (huge health and damage are allowed by design), a
-// boss bar, scaling the whole model up, strong melee gear, and rare structure spawning capped at a
-// single alive. It joins the built-in "Bosses" faction, which is hostile to essentially everything.
+// boss bar, a full model makeover — scaled to more than twice size and stretched into a hulking
+// silhouette — strong melee gear that renders on the stretched body, and rare structure spawning
+// capped at a single alive. It joins the built-in "Bosses" faction, hostile to essentially everything.
 public final class BossExample {
 
     private BossExample() {
@@ -32,8 +33,16 @@ public final class BossExample {
         // A purple boss bar, showing the NPC's name.
         titan.setBossBar(titan.bossBar().withEnabled(true).withColor("purple"));
 
-        // More than twice the size of a normal NPC.
-        titan.setModelSettings(titan.modelSettings().withSize(2.2F));
+        // Look: a "corbin" player skin blown up to more than twice size and stretched into a hulking
+        // titan — huge arms, long legs, a broad body. The player model renders the armor and weapon
+        // below, and part scales stay within the 0.5-2.0 stretch range.
+        titan.setModelSettings(titan.modelSettings()
+                .withModel("player", "corbin")
+                .withSize(2.2F)
+                .withHeadScale(1.2F)
+                .withBodyScale(1.4F)
+                .withLeftArmScale(1.6F).withRightArmScale(1.6F)
+                .withLeftLegScale(1.4F).withRightLegScale(1.4F));
 
         // A netherite axe hitting for 18, plus a full netherite set (cosmetic by default).
         titan.giveMeleeWeapon("minecraft:netherite_axe", 18.0F);
