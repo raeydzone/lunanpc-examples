@@ -18,10 +18,10 @@ Part of **[lunahub.net](https://lunahub.net)**.
 Along the way they show off **custom skins and model stretching** (`withModel` + per-part scales),
 chance-based item drops and XP ranges — not just the default Steve.
 
-Each is invoked once on server start by
-[`LunaExamplesMod`](src/main/java/net/lunahub/lunanpc/examples/LunaExamplesMod.java). Every example is
-idempotent (it checks whether its content already exists and returns early), so relaunching a world
-never duplicates anything.
+Each is invoked on server start by
+[`LunaExamplesMod`](src/main/java/net/lunahub/lunanpc/examples/LunaExamplesMod.java). Every example
+reuses its content if it already exists and re-applies the current settings — so editing an example
+and relaunching always reflects the change, and nothing is ever duplicated.
 
 ## Building
 

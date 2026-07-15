@@ -5,9 +5,10 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// Runs the five standalone LunaNPC API examples once, when a world's server starts. Each example is
-// a self-contained class you can read (or copy into your own mod) on its own — this class only
-// invokes them. All five are idempotent, so relaunching a world never piles up duplicates.
+// Runs the five standalone LunaNPC API examples when a world's server starts. Each is a
+// self-contained class you can read (or copy into your own mod) on its own; this class only invokes
+// them. Each reuses its content if it already exists and re-applies the current settings, so editing
+// an example and relaunching always reflects the change, and nothing is ever duplicated.
 public class LunaExamplesMod implements ModInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("LunaNPC-Examples");
