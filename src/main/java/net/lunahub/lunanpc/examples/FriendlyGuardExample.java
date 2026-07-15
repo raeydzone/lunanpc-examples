@@ -4,7 +4,7 @@ import java.util.List;
 import net.minecraft.server.MinecraftServer;
 import net.lunahub.luna_npc.api.AllianceRegistry;
 import net.lunahub.luna_npc.api.LunaNpcApi;
-import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
 import net.lunahub.luna_npc.api.ZoneRegistry;
 import net.lunahub.luna_npc.npc.NpcReactionSettings;
@@ -29,7 +29,7 @@ public final class FriendlyGuardExample {
         alliances.setEnemies(townsfolk, List.of("undead", "creatures", "illagers"));
 
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc guard = npcs.getOrCreate("TownGuard");
+        NpcDefinition guard = npcs.getOrCreate("TownGuard");
 
         guard.setHealth(40);
         guard.setNameTagShown(true);

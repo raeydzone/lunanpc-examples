@@ -3,7 +3,7 @@ package net.lunahub.lunanpc.examples;
 import net.minecraft.server.MinecraftServer;
 import net.lunahub.luna_npc.api.AllianceRegistry;
 import net.lunahub.luna_npc.api.LunaNpcApi;
-import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
 import net.lunahub.luna_npc.api.ZoneRegistry;
 import net.lunahub.luna_npc.npc.NpcReactionSettings;
@@ -34,7 +34,7 @@ public final class WarringFactionsExample {
 
     private static void spawnSoldier(NpcRegistry npcs, String name, String allianceId, String weapon,
                                      String modelType, String modelId, String arenaId) {
-        Npc soldier = npcs.getOrCreate(name);
+        NpcDefinition soldier = npcs.getOrCreate(name);
         soldier.setHealth(24);
         soldier.setNameTagShown(true);
         soldier.setAllianceId(allianceId);

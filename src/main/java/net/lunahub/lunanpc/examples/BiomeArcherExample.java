@@ -2,7 +2,7 @@ package net.lunahub.lunanpc.examples;
 
 import net.minecraft.server.MinecraftServer;
 import net.lunahub.luna_npc.api.LunaNpcApi;
-import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
 import net.lunahub.luna_npc.npc.NpcReactionSettings;
 import net.lunahub.luna_npc.zone.SurfaceMode;
@@ -16,7 +16,7 @@ public final class BiomeArcherExample {
 
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc archer = npcs.getOrCreate("DesertArcher");
+        NpcDefinition archer = npcs.getOrCreate("DesertArcher");
 
         archer.setHealth(20);
         archer.setAllianceId("creatures");

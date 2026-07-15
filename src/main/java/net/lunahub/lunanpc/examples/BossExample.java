@@ -2,7 +2,7 @@ package net.lunahub.lunanpc.examples;
 
 import net.minecraft.server.MinecraftServer;
 import net.lunahub.luna_npc.api.LunaNpcApi;
-import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
 import net.lunahub.luna_npc.npc.NpcReactionSettings;
 
@@ -15,7 +15,7 @@ public final class BossExample {
 
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        Npc titan = npcs.getOrCreate("DeepDarkTitan");
+        NpcDefinition titan = npcs.getOrCreate("DeepDarkTitan");
 
         titan.setHealth(300);
         titan.setNameTagShown(true);

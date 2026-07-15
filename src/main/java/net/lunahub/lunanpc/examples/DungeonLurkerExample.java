@@ -2,7 +2,7 @@ package net.lunahub.lunanpc.examples;
 
 import net.minecraft.server.MinecraftServer;
 import net.lunahub.luna_npc.api.LunaNpcApi;
-import net.lunahub.luna_npc.api.Npc;
+import net.lunahub.luna_npc.api.NpcDefinition;
 import net.lunahub.luna_npc.api.NpcRegistry;
 import net.lunahub.luna_npc.npc.NpcReactionSettings;
 import net.lunahub.luna_npc.zone.SurfaceMode;
@@ -17,7 +17,7 @@ public final class DungeonLurkerExample {
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
         // getOrCreate: reuse the definition if it exists, else create it — idempotent, no duplicates.
-        Npc lurker = npcs.getOrCreate("DungeonLurker");
+        NpcDefinition lurker = npcs.getOrCreate("DungeonLurker");
 
         lurker.setHealth(30);
         lurker.setAllianceId("undead");
