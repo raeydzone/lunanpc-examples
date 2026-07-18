@@ -97,8 +97,7 @@ public final class AdvancedBossExample {
                         action(NpcCombatActionType.SET_FLAG, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(1.0F), 0, 0, AIRBORNE),
                         sound("minecraft:entity.ender_dragon.flap"),
-                        action(NpcCombatActionType.SWITCH_NAV_MODE, NpcTargetSelector.SELF,
-                                NpcCombatPlacement.atSelf(), NpcValueSource.constant(0.0F), FLIGHT_TICKS, 0, "fly"),
+                        switchNav("fly", FLIGHT_TICKS, 12, true),
                         moveAbove(),
                         action(NpcCombatActionType.START_TIMER, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), FLIGHT_TICKS, 0, "land"),
@@ -120,8 +119,7 @@ public final class AdvancedBossExample {
                 List.of(
                         action(NpcCombatActionType.CLEAR_FLAG, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), 0, 0, AIRBORNE),
-                        action(NpcCombatActionType.SWITCH_NAV_MODE, NpcTargetSelector.SELF,
-                                NpcCombatPlacement.atSelf(), NpcValueSource.constant(0.0F), 1, 0, "ground"),
+                        switchNav("ground", 1, 0, false),
                         action(NpcCombatActionType.BOSS_BAR, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), 0, 0, "Ember Colossus")),
                 0.0F, false, 70, 0);
@@ -192,6 +190,13 @@ public final class AdvancedBossExample {
     private static NpcCombatAction moveAbove() {
         return action(NpcCombatActionType.MOVE_TO, NpcTargetSelector.SELF, aboveTarget(),
                 NpcValueSource.constant(0.0F), 0, 0, "");
+    }
+
+    // A temporary nav-mode switch that carries its own flight-height / swim-depth preference (amount = the
+    // height, flag = hold it vs give way to the target), so a normally-ground boss flies at a set altitude.
+    private static NpcCombatAction switchNav(String mode, int ticks, int height, boolean holdHeight) {
+        return new NpcCombatAction(NpcCombatActionType.SWITCH_NAV_MODE, NpcTargetSelector.SELF,
+                NpcCombatPlacement.atSelf(), NpcValueSource.constant(height), ticks, 0, mode, List.of(), holdHeight);
     }
 
     private static NpcValueSource source(NpcValueSourceType type) {
