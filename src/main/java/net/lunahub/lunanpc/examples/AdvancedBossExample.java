@@ -85,7 +85,7 @@ public final class AdvancedBossExample {
         NpcCombatRule scorch = rule(
                 trigger(NpcCombatTriggerType.INTERVAL, 6.0F, 0.0F),
                 List.of(grounded()),
-                List.of(useAttack("scorch_beam", NpcTargetSelector.PRIMARY)),
+                List.of(sound("minecraft:item.firecharge.use"), useAttack("scorch_beam", NpcTargetSelector.PRIMARY)),
                 0.0F, false, 70, -90);
 
         // At 60% HP, take flight: flag the aerial phase, switch to fly navigation, climb directly above the
@@ -96,23 +96,21 @@ public final class AdvancedBossExample {
                 List.of(
                         action(NpcCombatActionType.SET_FLAG, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(1.0F), 0, 0, AIRBORNE),
+                        sound("minecraft:entity.ender_dragon.flap"),
                         action(NpcCombatActionType.SWITCH_NAV_MODE, NpcTargetSelector.SELF,
                                 NpcCombatPlacement.atSelf(), NpcValueSource.constant(0.0F), FLIGHT_TICKS, 0, "fly"),
-                        action(NpcCombatActionType.MOVE_TO, NpcTargetSelector.SELF,
-                                new NpcCombatPlacement(NpcPlacementCentre.TARGET, NpcPlacementShape.AT_CENTRE, 0.0F,
-                                        0.0F, 1, 0, 2),
-                                NpcValueSource.constant(0.0F), 0, 0, ""),
+                        moveAbove(),
                         action(NpcCombatActionType.START_TIMER, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), FLIGHT_TICKS, 0, "land"),
                         action(NpcCombatActionType.BOSS_BAR, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), 0, 0, "Ember Colossus takes flight!")),
                 0.0F, true, -210, 0);
 
-        // While airborne, rain fire on the target.
+        // While airborne, hover over the target and rain fire on it.
         NpcCombatRule aerial = rule(
                 trigger(NpcCombatTriggerType.INTERVAL, 2.0F, 0.0F),
                 List.of(condition(airborne, NpcCombatComparator.GREATER_EQUAL, 1.0F)),
-                List.of(useAttack("star_fall", NpcTargetSelector.PRIMARY)),
+                List.of(moveAbove(), useAttack("star_fall", NpcTargetSelector.PRIMARY)),
                 0.0F, false, -70, 0);
 
         // When the landing timer elapses, drop the flag, return to ground navigation, and restore the bar.
@@ -158,6 +156,7 @@ public final class AdvancedBossExample {
                 List.of(
                         action(NpcCombatActionType.TELEGRAPH, NpcTargetSelector.SELF,
                                 selfArea(6.0F), NpcValueSource.constant(0.0F), 20, 0, "minecraft:flame"),
+                        sound("minecraft:entity.blaze.shoot"),
                         action(NpcCombatActionType.WAIT, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), 20, 0, ""),
                         action(NpcCombatActionType.EXPLOSION, NpcTargetSelector.ALL_IN_RANGE,
@@ -178,6 +177,21 @@ public final class AdvancedBossExample {
 
     private static NpcCombatPlacement selfArea(float radius) {
         return new NpcCombatPlacement(NpcPlacementCentre.SELF, NpcPlacementShape.AT_CENTRE, 0.0F, radius, 1, 0, 1);
+    }
+
+    private static NpcCombatPlacement aboveTarget() {
+        return new NpcCombatPlacement(NpcPlacementCentre.TARGET, NpcPlacementShape.AT_CENTRE, 0.0F, 0.0F, 1, 0, 2);
+    }
+
+    // A sound played at the boss's own position — great layered under an attack for weight.
+    private static NpcCombatAction sound(String id) {
+        return action(NpcCombatActionType.SOUND, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
+                NpcValueSource.constant(0.0F), 0, 0, id);
+    }
+
+    private static NpcCombatAction moveAbove() {
+        return action(NpcCombatActionType.MOVE_TO, NpcTargetSelector.SELF, aboveTarget(),
+                NpcValueSource.constant(0.0F), 0, 0, "");
     }
 
     private static NpcValueSource source(NpcValueSourceType type) {
