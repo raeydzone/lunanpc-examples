@@ -24,11 +24,15 @@ import net.lunahub.luna_npc.api.NpcTargetSelector;
 import net.lunahub.luna_npc.api.NpcValueSource;
 import net.lunahub.luna_npc.api.NpcValueSourceType;
 
-// A node-based advanced-combat boss: the Ember Colossus fights by a flat list of rules, each a trigger
-// plus conditions plus actions. HP is just a condition, so the "phases" (poke at range, cleave up close,
-// enrage and summon adds at half health, heal when low, telegraphed nova when swarmed) are emergent from
-// the rules — there is no phase construct. This is the developer mirror of the in-game node editor.
+// A node-based advanced-combat boss showing off most of the toolbox: five attack kinds (melee, homing
+// projectile, AoE ring, hitscan beam, raining pattern), a temporary nav-mode switch to flight with a
+// direct climb over the target, an "airborne" flag + timer that gates a whole aerial phase, an enrage +
+// summon phase, a self-heal, and a telegraphed nova around the boss. HP is just a condition, so the phases
+// are emergent — there is no phase construct. This mirrors, one-to-one, what the in-game node editor builds.
 public final class AdvancedBossExample {
+
+    private static final String AIRBORNE = "airborne";
+    private static final int FLIGHT_TICKS = 300;
 
     private AdvancedBossExample() {
     }
@@ -47,8 +51,6 @@ public final class AdvancedBossExample {
                 .withReaction(NpcReactionSettings.defaults().withMode(NpcReactionSettings.AGGRESSIVE)));
         boss.setSpawn(boss.spawn().withStructureWeight("minecraft:fortress", 1).withMaxNearby(1));
 
-        // The attack library: reusable attacks the rules invoke by name, each independent of the NPC's
-        // simple melee/ranged config.
         NpcCombatAttack cleave = new NpcCombatAttack("cleave", NpcCombatAttackKind.MELEE, 14.0F, 4.5F, 20.0F,
                 "minecraft:arrow", false, false, 1, 0.0F, List.of(), NpcCombatPlacement.atTarget());
         NpcCombatAttack ember = new NpcCombatAttack("ember_bolt", NpcCombatAttackKind.PROJECTILE, 9.0F, 32.0F,
@@ -58,27 +60,77 @@ public final class AdvancedBossExample {
                 20.0F, "minecraft:arrow", false, false, 1, 0.0F,
                 List.of(new NpcAttackEffect("minecraft:wither", 4.0F, 0)),
                 new NpcCombatPlacement(NpcPlacementCentre.TARGET, NpcPlacementShape.RING, 0.0F, 6.0F, 5, 0, 0));
+        NpcCombatAttack scorchBeam = new NpcCombatAttack("scorch_beam", NpcCombatAttackKind.BEAM, 12.0F, 2.0F,
+                20.0F, "minecraft:arrow", false, false, 1, 0.0F,
+                List.of(new NpcAttackEffect("flame", 0.0F, 2)), NpcCombatPlacement.atTarget());
+        NpcCombatAttack starFall = new NpcCombatAttack("star_fall", NpcCombatAttackKind.PATTERN, 8.0F, 2.0F,
+                22.0F, "minecraft:fire_charge", false, true, 1, 4.0F, List.of(),
+                new NpcCombatPlacement(NpcPlacementCentre.TARGET, NpcPlacementShape.RANDOM_IN_AREA, 0.0F, 8.0F, 6, 0, 2));
 
         NpcValueSource distance = source(NpcValueSourceType.DISTANCE_TO_TARGET);
         NpcValueSource selfHpPercent = source(NpcValueSourceType.SELF_HP_PERCENT);
+        NpcValueSource airborne = flag(AIRBORNE);
 
-        // Poke with ember bolts while the target is out of reach.
+        // On the ground: bolts at range, cleave up close, and a periodic scorching beam.
         NpcCombatRule ranged = rule(
                 trigger(NpcCombatTriggerType.INTERVAL, 2.0F, 0.0F),
-                List.of(condition(distance, NpcCombatComparator.GREATER, 5.0F)),
+                List.of(condition(distance, NpcCombatComparator.GREATER, 5.0F), grounded()),
                 List.of(useAttack("ember_bolt", NpcTargetSelector.PRIMARY)),
-                0.5F, false, -140, -40);
-
-        // Cleave once the target closes in.
+                0.5F, false, -210, -90);
         NpcCombatRule melee = rule(
                 trigger(NpcCombatTriggerType.INTERVAL, 1.2F, 0.0F),
-                List.of(condition(distance, NpcCombatComparator.LESS_EQUAL, 5.0F)),
+                List.of(condition(distance, NpcCombatComparator.LESS_EQUAL, 5.0F), grounded()),
                 List.of(useAttack("cleave", NpcTargetSelector.PRIMARY)),
-                0.4F, false, 40, -40);
+                0.4F, false, -70, -90);
+        NpcCombatRule scorch = rule(
+                trigger(NpcCombatTriggerType.INTERVAL, 6.0F, 0.0F),
+                List.of(grounded()),
+                List.of(useAttack("scorch_beam", NpcTargetSelector.PRIMARY)),
+                0.0F, false, 70, -90);
 
-        // At half health, enrage for ten seconds, summon three zombies around the target, and relabel the bar.
+        // At 60% HP, take flight: flag the aerial phase, switch to fly navigation, climb directly above the
+        // target, arm a landing timer, and relabel the bar.
+        NpcCombatRule takeFlight = rule(
+                trigger(NpcCombatTriggerType.ON_HP_CROSSES, 0.0F, 60.0F),
+                List.of(),
+                List.of(
+                        action(NpcCombatActionType.SET_FLAG, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
+                                NpcValueSource.constant(1.0F), 0, 0, AIRBORNE),
+                        action(NpcCombatActionType.SWITCH_NAV_MODE, NpcTargetSelector.SELF,
+                                NpcCombatPlacement.atSelf(), NpcValueSource.constant(0.0F), FLIGHT_TICKS, 0, "fly"),
+                        action(NpcCombatActionType.MOVE_TO, NpcTargetSelector.SELF,
+                                new NpcCombatPlacement(NpcPlacementCentre.TARGET, NpcPlacementShape.AT_CENTRE, 0.0F,
+                                        0.0F, 1, 0, 2),
+                                NpcValueSource.constant(0.0F), 0, 0, ""),
+                        action(NpcCombatActionType.START_TIMER, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
+                                NpcValueSource.constant(0.0F), FLIGHT_TICKS, 0, "land"),
+                        action(NpcCombatActionType.BOSS_BAR, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
+                                NpcValueSource.constant(0.0F), 0, 0, "Ember Colossus takes flight!")),
+                0.0F, true, -210, 0);
+
+        // While airborne, rain fire on the target.
+        NpcCombatRule aerial = rule(
+                trigger(NpcCombatTriggerType.INTERVAL, 2.0F, 0.0F),
+                List.of(condition(airborne, NpcCombatComparator.GREATER_EQUAL, 1.0F)),
+                List.of(useAttack("star_fall", NpcTargetSelector.PRIMARY)),
+                0.0F, false, -70, 0);
+
+        // When the landing timer elapses, drop the flag, return to ground navigation, and restore the bar.
+        NpcCombatRule land = rule(
+                trigger(NpcCombatTriggerType.ON_TIMER_ELAPSED, 0.0F, 0.0F, "land"),
+                List.of(),
+                List.of(
+                        action(NpcCombatActionType.CLEAR_FLAG, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
+                                NpcValueSource.constant(0.0F), 0, 0, AIRBORNE),
+                        action(NpcCombatActionType.SWITCH_NAV_MODE, NpcTargetSelector.SELF,
+                                NpcCombatPlacement.atSelf(), NpcValueSource.constant(0.0F), 1, 0, "ground"),
+                        action(NpcCombatActionType.BOSS_BAR, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
+                                NpcValueSource.constant(0.0F), 0, 0, "Ember Colossus")),
+                0.0F, false, 70, 0);
+
+        // At 40% HP, enrage for ten seconds and call in three zombies.
         NpcCombatRule enrage = rule(
-                trigger(NpcCombatTriggerType.ON_HP_CROSSES, 0.0F, 50.0F),
+                trigger(NpcCombatTriggerType.ON_HP_CROSSES, 0.0F, 40.0F),
                 List.of(),
                 List.of(
                         action(NpcCombatActionType.ENRAGE, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
@@ -89,43 +141,51 @@ public final class AdvancedBossExample {
                                 NpcValueSource.constant(0.0F), 0, 0, "minecraft:zombie"),
                         action(NpcCombatActionType.BOSS_BAR, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), 0, 0, "Ember Colossus — Enraged")),
-                0.0F, true, -50, 70);
+                0.0F, true, -210, 90);
 
-        // Mend when badly hurt, but no more than once every eight seconds.
+        // Mend when badly hurt, at most once every eight seconds.
         NpcCombatRule mend = rule(
                 trigger(NpcCombatTriggerType.INTERVAL, 8.0F, 0.0F),
                 List.of(condition(selfHpPercent, NpcCombatComparator.LESS, 30.0F)),
                 List.of(action(NpcCombatActionType.HEAL, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                         NpcValueSource.constant(30.0F), 0, 0, "")),
-                0.0F, false, -140, 170);
+                0.0F, false, -70, 90);
 
-        // When three or more hostiles crowd it, telegraph a ring, wait, then erupt.
+        // When three or more hostiles crowd it, telegraph a ring, wait, then erupt around itself.
         NpcCombatRule nova = rule(
                 trigger(NpcCombatTriggerType.ON_SURROUNDED, 0.0F, 3.0F),
                 List.of(),
                 List.of(
                         action(NpcCombatActionType.TELEGRAPH, NpcTargetSelector.SELF,
-                                new NpcCombatPlacement(NpcPlacementCentre.SELF, NpcPlacementShape.AT_CENTRE, 0.0F,
-                                        6.0F, 1, 0, 1),
-                                NpcValueSource.constant(0.0F), 20, 0, "minecraft:flame"),
+                                selfArea(6.0F), NpcValueSource.constant(0.0F), 20, 0, "minecraft:flame"),
                         action(NpcCombatActionType.WAIT, NpcTargetSelector.SELF, NpcCombatPlacement.atSelf(),
                                 NpcValueSource.constant(0.0F), 20, 0, ""),
                         action(NpcCombatActionType.EXPLOSION, NpcTargetSelector.ALL_IN_RANGE,
-                                new NpcCombatPlacement(NpcPlacementCentre.SELF, NpcPlacementShape.AT_CENTRE, 0.0F,
-                                        6.0F, 1, 0, 1),
-                                NpcValueSource.constant(12.0F), 0, 0, "")),
-                5.0F, false, 40, 170);
+                                selfArea(6.0F), NpcValueSource.constant(12.0F), 0, 0, "")),
+                5.0F, false, 70, 90);
 
         NpcAdvancedCombat advanced = NpcAdvancedCombat.defaults()
                 .withEnabled(true)
                 .withEngagementRadius(28.0F)
-                .withAttackLibrary(List.of(cleave, ember, flameRing))
-                .withRules(List.of(ranged, melee, enrage, mend, nova));
+                .withAttackLibrary(List.of(cleave, ember, flameRing, scorchBeam, starFall))
+                .withRules(List.of(ranged, melee, scorch, takeFlight, aerial, land, enrage, mend, nova));
         boss.setAdvancedCombat(advanced);
+    }
+
+    private static NpcCombatCondition grounded() {
+        return condition(flag(AIRBORNE), NpcCombatComparator.LESS, 1.0F);
+    }
+
+    private static NpcCombatPlacement selfArea(float radius) {
+        return new NpcCombatPlacement(NpcPlacementCentre.SELF, NpcPlacementShape.AT_CENTRE, 0.0F, radius, 1, 0, 1);
     }
 
     private static NpcValueSource source(NpcValueSourceType type) {
         return new NpcValueSource(type, 0.0F, 0.0F, 0, "");
+    }
+
+    private static NpcValueSource flag(String key) {
+        return new NpcValueSource(NpcValueSourceType.FLAG_VALUE, 0.0F, 0.0F, 0, key);
     }
 
     private static NpcCombatCondition condition(NpcValueSource left, NpcCombatComparator comparator, float right) {
@@ -134,6 +194,10 @@ public final class AdvancedBossExample {
 
     private static NpcCombatTrigger trigger(NpcCombatTriggerType type, float seconds, float threshold) {
         return new NpcCombatTrigger(type, seconds, threshold, "");
+    }
+
+    private static NpcCombatTrigger trigger(NpcCombatTriggerType type, float seconds, float threshold, String key) {
+        return new NpcCombatTrigger(type, seconds, threshold, key);
     }
 
     private static NpcCombatAction useAttack(String name, NpcTargetSelector target) {
