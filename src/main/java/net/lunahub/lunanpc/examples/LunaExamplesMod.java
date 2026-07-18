@@ -21,6 +21,7 @@ public class LunaExamplesMod implements ModInitializer {
             FriendlyGuardExample.build(server);
             WarringFactionsExample.build(server);
             BossExample.build(server);
+            AdvancedBossExample.build(server);
             DialogTreeExample.build(server);
             RangeSwitchGuardExample.build(server);
             LOGGER.info("LunaNPC examples applied.");
