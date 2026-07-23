@@ -18,10 +18,10 @@ dependencies {
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // The mod these examples target. Minecraft 26.2 is unobfuscated, so LunaNPC's jar is used as-is
-    // (no remap) — this puts its public API (net.raeydzone.luna_npc.api.*) on the compile classpath.
+    // (no remap) — this puts its public API (net.lunacore.luna_npc.api.*) on the compile classpath.
     // At runtime the real LunaNPC mod provides these classes, so it is a compile-only dependency.
     // Point this at wherever your LunaNPC jar lives (built with `./gradlew build` in the LunaNPC repo).
-    compileOnly files("../LunaNPC/build/libs/lunanpc-1.0.0.jar")
+    compileOnly files("../LunaNPC/build/libs/LunaNPC.jar")
 }
 
 processResources {
