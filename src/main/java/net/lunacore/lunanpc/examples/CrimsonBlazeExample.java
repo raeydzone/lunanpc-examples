@@ -18,6 +18,7 @@ import net.lunacore.luna_npc.api.NpcCombatRule;
 import net.lunacore.luna_npc.api.NpcCombatTrigger;
 import net.lunacore.luna_npc.api.NpcCombatTriggerType;
 import net.lunacore.luna_npc.api.NpcDefinition;
+import net.lunacore.luna_npc.api.NpcEditAccess;
 import net.lunacore.luna_npc.api.NpcReactionSettings;
 import net.lunacore.luna_npc.api.NpcRegistry;
 import net.lunacore.luna_npc.api.NpcTargetSelector;
@@ -40,7 +41,7 @@ public final class CrimsonBlazeExample {
 
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        NpcDefinition blaze = npcs.getOrCreate("CrimsonBlaze");
+        NpcDefinition blaze = npcs.getOrCreate("CrimsonBlaze", NpcEditAccess.API_ONLY);
 
         blaze.setHealth(10);
         blaze.setAllianceId("creatures");

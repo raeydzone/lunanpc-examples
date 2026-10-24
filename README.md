@@ -20,10 +20,11 @@ chances, equipment and drops, a flying movement type, and both simple and advanc
 Each is invoked on server start by
 [`LunaExamplesMod`](src/main/java/net/lunacore/lunanpc/examples/LunaExamplesMod.java). They upsert by
 name, so editing an example and relaunching re-applies the change without ever creating a duplicate.
+They are created as `NpcEditAccess.API_ONLY`, so they show locked in-game and only the code changes them.
 
 ## Building
 
-These target Minecraft 26.2 (Fabric, Java 25) — the same toolchain as LunaNPC — and compile against
+These target Minecraft 26.3 (Fabric, Java 25) — the same toolchain as LunaNPC — and compile against
 LunaNPC's API jar:
 
 1. Build LunaNPC (`./gradlew build` in the LunaNPC repo) so `build/libs/LunaNPC.jar` exists.

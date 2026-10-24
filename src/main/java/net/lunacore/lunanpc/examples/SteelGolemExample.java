@@ -4,6 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import net.lunacore.luna_npc.api.LunaNpcApi;
 import net.lunacore.luna_npc.api.NpcAttackSettings;
 import net.lunacore.luna_npc.api.NpcDefinition;
+import net.lunacore.luna_npc.api.NpcEditAccess;
 import net.lunacore.luna_npc.api.NpcReactionSettings;
 import net.lunacore.luna_npc.api.NpcRegistry;
 import net.lunacore.luna_npc.api.SurfaceMode;
@@ -17,7 +18,7 @@ public final class SteelGolemExample {
 
     public static void build(MinecraftServer server) {
         NpcRegistry npcs = LunaNpcApi.npcs(server);
-        NpcDefinition golem = npcs.getOrCreate("SteelGolem");
+        NpcDefinition golem = npcs.getOrCreate("SteelGolem", NpcEditAccess.API_ONLY);
 
         golem.setHealth(200);
         golem.setCategory("golems");
