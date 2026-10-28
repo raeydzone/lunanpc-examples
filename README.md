@@ -1,6 +1,6 @@
 # LunaNPC Examples
 
-Three small, self-contained examples of the [LunaNPC](https://github.com/raeydzone/LunaNPC) developer
+Three small, self-contained examples of the [LunaNPC](https://github.com/LunaCore-dev/LunaNPC) developer
 API. Each lives in a single Java file, so you can read one on its own and drop it straight into your own
 mod. They all use only LunaNPC's built-in models — no custom assets.
 
